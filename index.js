@@ -23,7 +23,7 @@ app.use(methodsOverride("_method"));
 //* parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded());
 
-app.set("views", "./views");
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
 //*flash
@@ -36,7 +36,7 @@ app.use(flash());
 //* app locals variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
-app.use(express.static("public"));
+app.use(express.static(`${__dirname}/public`));
 
 //*Router
 routerAdmin(app);
