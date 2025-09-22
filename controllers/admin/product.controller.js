@@ -36,8 +36,18 @@ module.exports.index = async (req, res) => {
 
   //*end pagination
 
+  //* sort
+  let sort = {};
+
+  if (req.query.sortKey && req.query.sortValue) {
+    sort[req.query.sortKey] = req.query.sortValue;
+  } else {
+    sort.position = "desc";
+  }
+  //* end sort
+
   const products = await Products.find(find)
-    .sort({ position: "desc" })
+    .sort(sort)
     .limit(objectPagination.limitItem)
     .skip(objectPagination.skip);
   //console.log(products);
@@ -149,7 +159,7 @@ module.exports.createPost = async (req, res) => {
   } else {
     req.body.position = parseInt(req.body.position);
   }
-  
+
   const product = new Products(req.body);
   await product.save();
   res.redirect(`${prefixAdmin}/products`);
