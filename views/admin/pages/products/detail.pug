@@ -32,7 +32,7 @@ block main
     div(class="mb-4") Vị trí: <b>#{products.position}</b>
   
   if (products.description) 
-    div(class="mb-04") #{products.description}
+    div(class="mb-04") !{products.description}
 
   a(
     href=`${prefixAdmin}/products/edit/${products.id}`

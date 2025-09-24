@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const methodsOverride = require("method-override");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -12,6 +13,7 @@ const systemConfig = require("./config/system");
 
 const router = require("./routes/client/index.route");
 const routerAdmin = require("./routes/admin/index.route");
+// const { default: tinymce } = require("tinymce");
 
 database.connect();
 
@@ -32,6 +34,12 @@ app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 //*end flash
 
+//* tinyMCE
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
+//* end tinyMCE
 
 //* app locals variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
