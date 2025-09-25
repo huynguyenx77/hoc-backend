@@ -63,7 +63,6 @@ module.exports.index = async (req, res) => {
 
 //* [PATCH] /admin/products/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
-  console.log(">>> CHANGE", req.originalUrl);
   const status = req.params.status;
   const id = req.params.id;
 
@@ -191,14 +190,14 @@ module.exports.editPatch = async (req, res) => {
   req.body.stock = parseInt(req.body.stock);
   req.body.position = parseInt(req.body.position);
 
-  if (req.file) {
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
+  if (!req.body.thumbnail) {
+    req.body.thumbnail = Products.thumbnail;
   }
   try {
     await Products.updateOne({ _id: req.params.id }, req.body);
     req.flash("success", "Cập nhập thành công!");
   } catch (error) {
-    req.flash("success", "Cập nhập thành công!");
+    req.flash("error", "Cập nhập thất bại!");
   }
   res.redirect(req.originalUrl);
 };

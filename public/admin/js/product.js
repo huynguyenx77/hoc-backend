@@ -1,4 +1,4 @@
-// change status
+//* change status
 const buttonChangeStatus = document.querySelectorAll("[button-change-status]");
 if (buttonChangeStatus.length > 0) {
   const formChangeStatus = document.querySelector("#form-change-status");
@@ -21,9 +21,9 @@ if (buttonChangeStatus.length > 0) {
   });
 }
 
-// end change status
+//* end change status
 
-// delete item
+//* delete item
 const buttonDelete = document.querySelectorAll("[button-delete]");
 if (buttonDelete.length > 0) {
   const formDeleteItem = document.querySelector("#form-delete-item");
@@ -41,4 +41,4 @@ if (buttonDelete.length > 0) {
     });
   });
 }
-// end delete item
+//* end delete item
