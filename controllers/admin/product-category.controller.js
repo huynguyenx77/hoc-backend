@@ -4,6 +4,7 @@ const filterStatusHelper = require("../../helpers/filterStatus");
 const searchHelper = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
 const prefixAdmin = systemConfig.prefixAdmin;
+const createTreeHelper = require("../../helpers/createTree");
 //* [GET] /admin/products-category
 module.exports.index = async (req, res) => {
   const filterStatus = filterStatusHelper(req.query);
@@ -46,14 +47,16 @@ module.exports.index = async (req, res) => {
   }
   //* end sort
 
-  const record = await productsCategory.find(find)
+  const record = await productsCategory
+    .find(find)
     .sort(sort)
     .limit(objectPagination.limitItem)
     .skip(objectPagination.skip);
 
+  const newRecords = createTreeHelper.tree(record);
   res.render("admin/pages/products-category/index", {
     pageTitle: "Danh mục sản phẩm",
-    record: record,
+    record: newRecords,
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,
     pagination: objectPagination,
@@ -78,14 +81,20 @@ module.exports.changeMulti = async (req, res) => {
 
   switch (type) {
     case "active":
-      await productsCategory.updateMany({ _id: { $in: ids } }, { status: "active" });
+      await productsCategory.updateMany(
+        { _id: { $in: ids } },
+        { status: "active" }
+      );
       req.flash(
         "success",
         `Cập nhập trạng thái ${ids.length} sản phẩm thành công!`
       );
       break;
     case "inactive":
-      await productsCategory.updateMany({ _id: { $in: ids } }, { status: "inactive" });
+      await productsCategory.updateMany(
+        { _id: { $in: ids } },
+        { status: "inactive" }
+      );
       req.flash(
         "success",
         `Cập nhập trạng thái ${ids.length} sản phẩm thành công!`
@@ -193,8 +202,17 @@ module.exports.detail = async (req, res) => {
 
 //* [GET] /admin/products-category/create
 module.exports.create = async (req, res) => {
+  let find = {
+    deleted: false,
+  };
+  
+
+  const records = await productsCategory.find(find);
+  const newRecords = createTreeHelper.tree(records);
+
   res.render("admin/pages/products-category/create", {
     pageTitle: "Danh mục sản phẩm",
+    records: newRecords,
   });
 };
 
