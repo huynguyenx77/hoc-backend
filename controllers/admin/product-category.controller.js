@@ -155,14 +155,20 @@ module.exports.edit = async (req, res) => {
       _id: req.params.id,
     };
 
-    const record = await productsCategory.findOne(find);
-
+    const data = await productsCategory.findOne(find);
+    // *lấy danh mục cha--------------------------
+    const records = await productsCategory.find({
+      deleted: false,
+    });
+    const newRecords = createTreeHelper.tree(records);
+    //*--------------------------------------------
     res.render("admin/pages/products-category/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",
-      record: record,
+      data: data,
+      records: newRecords,
     });
   } catch (error) {
-    res.redirect(`${prefixAdmin}/products`);
+    res.redirect(`${prefixAdmin}/products-category`);
   }
 };
 
@@ -171,7 +177,7 @@ module.exports.editPatch = async (req, res) => {
   req.body.position = parseInt(req.body.position);
 
   if (!req.body.thumbnail) {
-    req.body.thumbnail = Products.thumbnail;
+    req.body.thumbnail = productsCategory.thumbnail;
   }
   try {
     await productsCategory.updateOne({ _id: req.params.id }, req.body);
