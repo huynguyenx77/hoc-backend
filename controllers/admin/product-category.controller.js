@@ -65,7 +65,7 @@ module.exports.edit = async (req, res) => {
   }
 };
 
-//* [GET] /admin/products-category/edit/:id
+//* [PATCH] /admin/products-category/edit/:id
 module.exports.editPatch = async (req, res) => {
   const id = req.params.id;
   req.body.position = parseInt(req.body.position);
