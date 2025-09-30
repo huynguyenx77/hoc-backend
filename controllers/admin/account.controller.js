@@ -15,7 +15,7 @@ module.exports.index = async (req, res) => {
     const role = await Role.findOne({
       _id: record.role_id,
       deleted: false,
-    })
+    });
     record.role = role;
   }
   res.render("admin/pages/account/index", {
@@ -41,7 +41,7 @@ module.exports.createPost = async (req, res) => {
     email: req.body.email,
     deleted: false,
   });
-  if(emaiExist){
+  if (emaiExist) {
     req.flash("error", `Email ${req.body.email} đã tồn tại`);
     res.redirect(req.originalUrl);
   } else {
@@ -50,4 +50,48 @@ module.exports.createPost = async (req, res) => {
     await records.save();
     res.redirect(`${prefixAdmin}/accounts`);
   }
+};
+
+//* [GET] /admin/accounts/edit/:id
+module.exports.edit = async (req, res) => {
+  let find = {
+    deleted: false,
+    _id: req.params.id,
+  };
+  try {
+    const accounts = await Acounts.findOne(find);
+    const roles = await Role.find({
+      deleted: false,
+    });
+
+    res.render("admin/pages/account/edit", {
+      pageTitle: "Chỉnh sửa tài khoảng",
+      accounts: accounts,
+      roles: roles,
+    });
+  } catch (error) {
+    res.redirect(`${prefixAdmin}/accounts`);
+  }
+};
+
+//* [PATCH] /admin/accounts/edit/:id
+module.exports.editPatch = async (req, res) => {
+  const id = req.params.id;
+  const emaiExist = await Acounts.findOne({
+    _id: { $ne: id }, //* cú pháp {$ne: ..} là ngoại trừ cái gì đó 
+    email: req.body.email,
+    deleted: false,
+  });
+  if (emaiExist) {
+    req.flash("error", `Email ${req.body.email} đã tồn tại`);
+  } else {
+    if (req.body.password) {
+      req.body.password = md5(req.body.password);
+    } else {
+      delete req.body.password;
+    }
+    await Acounts.updateOne({ _id: id }, req.body);
+    req.flash("success", "Cập nhập tài khoảng thành công");
+  }
+  res.redirect(`${prefixAdmin}/accounts/edit/${id}`);
 };
