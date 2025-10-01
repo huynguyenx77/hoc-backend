@@ -2,9 +2,8 @@ const md5 = require("md5");
 const Acounts = require("../../models/account.models");
 const Roles = require("../../models/roles.models");
 const systemConfig = require("../../config/system");
-const Role = require("../../models/roles.models");
-
 const prefixAdmin = systemConfig.prefixAdmin;
+const Role = require("../../models/roles.models");
 //* [GET] /admin/accounts
 module.exports.index = async (req, res) => {
   let find = {
