@@ -15,6 +15,21 @@ module.exports.index = async (req, res) => {
   });
 };
 
+//* [PATCH] /admin/products-category/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+  try {
+    const status = req.params.status;
+    const id = req.params.id;
+
+    await ProductCategory.updateOne({ _id: id }, { status: status });
+    req.flash("success", "Cập nhập trạng thái thành công!");
+
+    res.redirect(req.get("Referrer") || "/admin/products");
+  } catch (error) {
+    req.flash("Error", "Cập nhập trạng thái thất bại!");
+  }
+};
+
 //* [GET] /admin/product-category/create
 module.exports.create = async (req, res) => {
   let find = {
