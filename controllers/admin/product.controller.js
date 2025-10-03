@@ -55,6 +55,7 @@ module.exports.index = async (req, res) => {
     .skip(objectPagination.skip);
   //console.log(products);
   for (const product of products) {
+    //*lấy ra thông tin người tạo
     const user = await Account.findOne({
       _id: product.createdBy.account_id
     });
@@ -62,6 +63,17 @@ module.exports.index = async (req, res) => {
     if(user){
       product.accountFullName = user.fullName; 
     }
+    
+    //* lấy ra thông tin người chỉnh sửa gần nhất
+    const updatedBy = product.updatedBy[product.updatedBy.length - 1];
+    if(updatedBy){
+      const userUpdate = await Account.findOne({
+        _id: updatedBy.account_id,
+      }) 
+      updatedBy.accountFullName = userUpdate.fullName;
+      
+    }
+
   }
   res.render("admin/pages/products/index", {
     pageTitle: "Danh sách sản phẩm",
@@ -76,8 +88,16 @@ module.exports.index = async (req, res) => {
 module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
-
-  await Products.updateOne({ _id: id }, { status: status });
+  
+  const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    }
+  
+  await Products.updateOne({ _id: id }, {
+    status: status,
+    $push: { updatedBy: updatedBy},
+  });
   req.flash("success", "Cập nhập trạng thái thành công!");
 
   res.redirect(req.get("Referrer") || "/admin/products");
@@ -88,16 +108,26 @@ module.exports.changeMulti = async (req, res) => {
   const type = req.body.type;
   const ids = req.body.ids.split(", ");
 
+  const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    }
   switch (type) {
     case "active":
-      await Products.updateMany({ _id: { $in: ids } }, { status: "active" });
+      await Products.updateMany({ _id: { $in: ids } }, {
+        status: "active" ,
+        $push: { updatedBy: updatedBy},
+      });
       req.flash(
         "success",
         `Cập nhập trạng thái ${ids.length} sản phẩm thành công!`
       );
       break;
     case "inactive":
-      await Products.updateMany({ _id: { $in: ids } }, { status: "inactive" });
+      await Products.updateMany({ _id: { $in: ids } }, { 
+        status: "inactive",
+        $push: { updatedBy: updatedBy},
+       });
       req.flash(
         "success",
         `Cập nhập trạng thái ${ids.length} sản phẩm thành công!`
@@ -108,7 +138,10 @@ module.exports.changeMulti = async (req, res) => {
         { _id: { $in: ids } },
         {
           deleted: true,
-          deletedAt: new Date(),
+          deletedBy:{
+            account_id: res.locals.user.id,
+            deletedAt: new Date(),
+          }
         }
       );
       req.flash("success", `Đã xóa ${ids.length} sản phẩm thành công!`);
@@ -121,6 +154,7 @@ module.exports.changeMulti = async (req, res) => {
           { _id: id },
           {
             position: position,
+            $push: { updatedBy: updatedBy},
           }
         );
       }
@@ -143,7 +177,10 @@ module.exports.deleteItem = async (req, res) => {
     { _id: id },
     {
       deleted: true,
-      deletedAt: new Date(),
+      deletedBy:{
+        account_id: res.locals.user.id,
+        deletedAt: new Date(),
+      }
     }
   );
   req.flash("success", `Đã xóa sản phẩm thành công!`);
@@ -217,7 +254,14 @@ module.exports.editPatch = async (req, res) => {
     req.body.thumbnail = Products.thumbnail;
   }
   try {
-    await Products.updateOne({ _id: req.params.id }, req.body);
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    }
+    await Products.updateOne({ _id: req.params.id }, {
+      ...req.body,
+      $push: { updatedBy: updatedBy},
+    });
     req.flash("success", "Cập nhập thành công!");
   } catch (error) {
     req.flash("error", "Cập nhập thất bại!");
