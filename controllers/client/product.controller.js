@@ -17,19 +17,28 @@ module.exports.index = async (req, res) => {
   });
 };
 
-//* [GET] /products/:slug
+//* [GET] /products/detail/:slug
 module.exports.detail = async (req, res) => {
   try {
     const find = {
       deleted: false,
-      slug: req.params.slug,
+      slug: req.params.slugProduct,
       status: "active",
     };
 
     const product = await Product.findOne(find);
+    if (product.products_category_id) {
+      const category = await ProductCategory.findOne({
+        _id: product.products_category_id,
+        status: "active",
+        deleted: false,
+      });
+      product.category = category;
+    }
+    product.priceNew = productHelper.priceNewProduct(product);
     res.render("client/pages/products/detail", {
       pageTitle: product.title,
-      products: product,
+      product: product,
     });
   } catch (error) {
     res.redirect(`/products`);
@@ -44,9 +53,11 @@ module.exports.category = async (req, res) => {
     deleted: false,
   });
 
-  const listSubCategory = await productCategoryHelper.setSubCategory(category.id);
+  const listSubCategory = await productCategoryHelper.setSubCategory(
+    category.id
+  );
 
-  const listSubCategoryId = listSubCategory.map(item => item.id);
+  const listSubCategoryId = listSubCategory.map((item) => item.id);
 
   const products = await Product.find({
     products_category_id: { $in: [category.id, ...listSubCategoryId] },

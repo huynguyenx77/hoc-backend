@@ -1,28 +1,53 @@
 extends ../../layouts/default.pug
-
+include ../../mixins/box-head.pug
 block main 
-  .container.my-3
+  .product-detail
+    .container.my-5
+      .row 
+        .col-6  
+          .inner-thumb
+            img(
+                src=product.thumbnail, alt=product.title
+              )
+        .col-6
+          h1(class="mb-4") #{product.title} 
+          if product.category
+            div(class="inner-category")
+              span Danh mục: 
+              a(href=`/products/${product.category.slug}`) #{product.category.title} 
+        
+          if (product.priceNew) 
+            div(class="inner-price-new") #{product.priceNew}$
+          
+          if (product.price) 
+            div(class="inner-price-old") #{product.price}$
+          
+          if (product.discountPercentage) 
+            div(class="inner-percent") Giảm giá: <span>#{product.discountPercentage}%</span>
+          
+          if (product.stock) 
+            div(class="inner-stock") Còn lại: <span>#{product.stock}</span> sản phẩm
+
+          form(
+            action=`/cart/add/${product.id}`
+            method="POST"
+          )
+            input(
+              class="form-control mb-2"
+              type="number"
+              name="quantity"
+              value="1"
+              min="1"
+              max=product.stock
+            )
+            button(
+              type="submit"
+              class="btn btn-success btn-block"
+            ) Thêm vào giỏ hàng
+  hr
+
+  .container.my-5 
     .row 
       .col-12 
-        if (products.title)
-          h1(class="mb-4") #{products.title} 
-        if (products.price) 
-          div(class="mb-4") Giá: <b>#{products.price}$</b>
-        
-        if (products.discountPercentage) 
-          div(class="mb-4") Giảm giá: <b>#{products.discountPercentage}%</b>
-        
-        if (products.stock) 
-          div(class="mb-4") Còn lại: <b>#{products.stock}</b>
-        
-        if (products.thumbnail)
-          div(class="mb-4")
-            img(
-              src=products.thumbnail
-              style="width: 100px"
-            )
-        if (products.position) 
-          div(class="mb-4") Vị trí: <b>#{products.position}</b>
-        
-        if (products.description) 
-          div(class="mb-04") #{products.description}
+        +box-head("Mô tả sản phẩm")
+        .inner-desc !{product.description}
