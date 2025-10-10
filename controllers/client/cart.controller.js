@@ -71,7 +71,7 @@ module.exports.addPost = async (req, res) => {
   res.redirect(req.get("Referrer"));
 };
 
-//* [GET] /delete/:id
+//* [GET] /delete/:productId
 module.exports.delete = async (req, res) => {
   const cartId = req.cookies.cartId;
   const productId = req.params.productId;
@@ -85,5 +85,24 @@ module.exports.delete = async (req, res) => {
   );
   console.log(productId);
   req.flash("success", "Đã xóa sản phẩm thành công");
+  res.redirect(req.get("Referrer"));
+};
+
+//* [GET] /update/:productId/:quantity
+module.exports.update = async (req, res) => {
+  const cartId = req.cookies.cartId;
+  const productId = req.params.productId;
+  const quantity = req.params.quantity;
+  await Cart.updateOne(
+    {
+      _id: cartId,
+      "products.product_id": productId,
+    },
+    {
+      "products.$.quantity": quantity,
+    }
+  ); //* update value quantity in array of objects
+  console.log(productId);
+  req.flash("success", "Đã cập nhập số lượng");
   res.redirect(req.get("Referrer"));
 };
