@@ -10,8 +10,8 @@ const userRoutes = require("./user.route");
 
 module.exports = (app) => {
   app.use(categoryMiddleWare.category);
-  app.use(cartMiddleWare.cartId);
   app.use(userMiddleware.infoUser);
+  app.use(cartMiddleWare.cartId);
   app.use("/", homeRoutes);
   app.use("/products", productRoutes);
   app.use("/search", searchRoutes);
