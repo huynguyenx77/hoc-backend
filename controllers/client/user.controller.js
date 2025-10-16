@@ -1,5 +1,6 @@
 const User = require("../../models/user.models");
 const ForgotPassword = require("../../models/forgot-password.models");
+const Cart = require("../../models/cart.model");
 
 const genarateHelper = require("../../helpers/genarate");
 const sendMailHelper = require("../../helpers/sendMail")
@@ -59,6 +60,11 @@ module.exports.loginPost = async (req, res) => {
     return;
   }
   res.cookie("tokenUser", user.tokenUser);
+  await Cart.updateOne({
+    _id: req.cookies.cartId,
+  }, {
+    user_id: user.id,
+  })
   res.redirect("/");
 };
 
