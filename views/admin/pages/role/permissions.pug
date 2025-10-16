@@ -132,6 +132,15 @@ block main
             each item in records
               td(class="text-center")
                 input(type="checkbox")
+          //Cài đặt
+          tr 
+            th(colspan="4")
+              b Cài đặt
+          tr(data-name="setting_general")
+            td Cài đặt chung
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")
 
     form(
       action=`${prefixAdmin}/roles/permissions?_method=PATCH`
