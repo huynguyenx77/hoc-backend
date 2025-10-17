@@ -254,3 +254,130 @@
 }
 
 /** end show alert */
+
+/** chat */
+/* ✅ Toàn bộ phần chat được giới hạn trong .chat-box */
+.chat-box .col-12 {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 700px;  /* 💡 to hơn mà vẫn gọn */
+  margin: 0 auto;    /* căn giữa */
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+/* Phần thân chứa tin nhắn */
+.chat-box .inner-body {
+  flex: 1;
+  padding: 15px 20px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+/* Tin nhắn đến */
+.chat-box .inner-incoming {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.chat-box .inner-incoming .inner-name {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.chat-box .inner-incoming .inner-content {
+  background: #eee;
+  color: #000;
+  padding: 9px 13px;
+  border-radius: 15px 15px 15px 0;
+  max-width: 70%;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Tin nhắn đi */
+.chat-box .inner-outgoing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.chat-box .inner-outgoing .inner-content {
+  background: #ff7da5;
+  color: #fff;
+  padding: 9px 13px;
+  border-radius: 15px 15px 0 15px;
+  max-width: 70%;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Phần nhập nội dung */
+.chat-box .inner-foot {
+  border-top: 1px solid #ddd;
+  padding: 10px 15px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.chat-box .inner-foot form {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.chat-box .inner-foot input[type="text"] {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-box .inner-foot input[type="text"]:focus {
+  border-color: #ff7da5;
+}
+
+.chat-box .inner-foot button {
+  border: none;
+  background: #ff7da5;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  margin-left: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.chat-box .inner-foot button:hover {
+  background: #ff6590;
+  transform: scale(1.05);
+}
+
+/* Thanh cuộn */
+.chat-box .inner-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-box .inner-body::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+
+/** end chat */

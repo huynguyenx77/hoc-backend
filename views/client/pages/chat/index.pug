@@ -1,0 +1,36 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+  .container.my-3
+    .row 
+      .col-12 
+        .box-head 
+          +box-head(pageTitle)
+
+    .row 
+      .col-12 
+        .chat-box
+          .inner-body 
+            .inner-incoming
+              .inner-name Em Yêu 
+              .inner-content 
+                | A ơi sang nhà e nha, nhà em không có ai ở nhà cả
+            .inner-outgoing 
+              .inner-content 
+                | Thế à? OK em iu
+          
+          .inner-foot 
+            form(
+              class="inner-form"
+              action=""
+            ) 
+              input(
+                type="text"
+                placeholder="Nhập nội dung..."
+                name="content"
+              )
+              button 
+                .fa-solid.fa-paper-plane
+            
+      
