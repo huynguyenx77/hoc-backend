@@ -10,7 +10,7 @@ block main
 
     .row 
       .col-12 
-        .chat-box
+        .chat-box(my-id=user.id)
           .inner-body
             each chat in chats 
               div(class=(chat.infoUser.id == user.id ? "inner-outgoing" : "inner-incoming"))
@@ -18,9 +18,6 @@ block main
                   .inner-name #{chat.infoUser.fullName}
                 .inner-content 
                   | #{chat.content}
-            //- .inner-outgoing 
-            //-   .inner-content 
-            //-     | Thế à? OK em iu
           
           .inner-foot 
             form(
