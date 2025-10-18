@@ -10,7 +10,6 @@ require("dotenv").config();
 const http = require("http");
 const { Server } = require("socket.io");
 
-
 const database = require("./config/database");
 
 const systemConfig = require("./config/system");
@@ -35,10 +34,7 @@ app.set("view engine", "pug");
 //* socketIO
 const server = http.createServer(app);
 const io = new Server(server);
-
-io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
-});
+global._io = io;
 
 //*flash
 app.use(cookieParser("khanh"));
