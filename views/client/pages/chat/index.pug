@@ -24,6 +24,10 @@ block main
                     each image in chat.images
                       img(src=image, alt="ERROR")
             div(class="inner-list-typing")
+          
+          .inner-preview-images 
+            div(class="custom-file-container" data-upload-id="upload-image")
+
           .inner-foot 
             form(
               class="inner-form"
@@ -33,8 +37,8 @@ block main
                 type="text"
                 placeholder="Nhập nội dung..."
                 name="content"
-              )
-              div(class="custom-file-container" data-upload-id="upload-image")
+              ) 
+              label(for="file-upload-with-preview-upload-image" class="btn btn-light mx-2 mb-0") <i class="fa-regular fa-images"></i>
               span(class="button-icon btn btn-light mx-2") <i class="fa-solid fa-face-smile"></i>
               button 
                 .fa-solid.fa-paper-plane
