@@ -1,11 +1,10 @@
 import * as Popper from "https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js";
-import {FileUploadWithPreview} from "https://unpkg.com/file-upload-with-preview/dist/index.js";
+import { FileUploadWithPreview } from "https://unpkg.com/file-upload-with-preview/dist/index.js";
 
 // *FileUploadWithPreview
 const upload = new FileUploadWithPreview("upload-image", {
   multiple: true,
   maxFileCount: 6,
-  
 });
 // * end FileUploadWithPreview
 
@@ -45,18 +44,18 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
     div.classList.add("inner-incoming");
     htmlFullName = `<div class="inner-name">${data.fullName}</div>`;
   }
-  if(data.content){
+  if (data.content) {
     htmlContent = `
       <div class="inner-content">${data.content}</div>
     `;
   }
-  if(data.images) {
+  if (data.images) {
     htmlImages += `<div class="inner-images">`;
 
     for (const image of data.images) {
-      htmlImages += `<img src="${image}">`
+      htmlImages += `<img src="${image}">`;
     }
-    htmlImages+= "</div>";
+    htmlImages += "</div>";
   }
   div.innerHTML = `
     ${htmlFullName}
@@ -65,6 +64,13 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
   `;
   body.insertBefore(div, boxTyping);
   body.scrollTop = body.scrollHeight;
+
+  //*preview image
+  const boxImages = div.querySelector(".inner-images")
+  if (boxImages) {
+    const gallery = new Viewer(boxImages);
+  }
+  //*end preview image
 });
 //* end SERVER_RETURN_MESSAGE
 
@@ -157,3 +163,11 @@ socket.on("SERVER_RETURN_TYPING", (data) => {
   }
 });
 //* end server return typing
+
+//* preview image
+const chatBody = document.querySelector(".chat-box .inner-body");
+
+if (chatBody) {
+  const gallery = new Viewer(chatBody);
+}
+//*end preview image
