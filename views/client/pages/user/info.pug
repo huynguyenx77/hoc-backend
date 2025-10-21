@@ -5,4 +5,17 @@ block main
     .row 
       .col-12 
         +box-head("Thông tin tài khoảng")
-  
+    if (user.avatar) 
+      img(src=user.avatar width="150px" class = "mb-3") 
+    else 
+      img(src="admin/images/avatar.png" width="150px" class = "mb-3") 
+
+    if (user.fullName) 
+      p Họ tên: <b>#{user.fullName}</b>
+
+    if (user.email) 
+      p Email: <b>#{user.email}</b>
+    p
+      span Trạng thái: 
+      span
+        <b>#{user.status === "active" ? "Hoạt động" : "Dừng hoạt động"}</b>
