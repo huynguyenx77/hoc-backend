@@ -3,5 +3,6 @@ const router = express.Router();
 
 const controller = require("../../controllers/client/users-list.controller");
 router.get("/not-friend", controller.notFriend);
+router.get("/request", controller.request);
 
 module.exports = router;
