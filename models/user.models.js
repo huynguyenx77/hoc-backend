@@ -10,6 +10,14 @@ const userSchema = new mongoose.Schema({
   },
   phone: String,
   avatar: String,
+  friendList: [
+    {
+      user_id: String,
+      room_chat_id: String,
+    }
+  ],
+  acceptFriend: Array, //lưu danh sách ai muốn kb
+  requestFriend: Array, //lưu danh sách muốn kb
   status: {
     type: String,
     default: "active",
