@@ -5,7 +5,7 @@ block main
     include ../../partials/list-btn-user.pug
     .row 
       .col-12 
-        +box-head("Lời mời đã gửi")
+        +box-head("Lời mời kết bạn")
 
     .row
       each user in users
@@ -20,11 +20,16 @@ block main
               div(class="inner-button")
                 button(
                   class="btn btn-sm btn-primary mr-1"
-                  btn-add-friend=user.id
-                ) Kết bạn
+                  btn-accept-friend=user.id
+                ) Chấp nhận
                 button(
                   class="btn btn-sm btn-secondary mr-1"
-                  btn-cancel-friend=user.id
+                  btn-refuse-friend=user.id
                 ) Hủy
+                button(
+                  class="btn btn-sm btn-secondary mr-1"
+                  btn-deleted-friend=user.id
+                  disabled
+                ) Đã hủy
   block script
     script(type="module", src="/js/user.js")    

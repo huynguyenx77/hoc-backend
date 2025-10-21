@@ -41,7 +41,7 @@ module.exports.user = async (res) => {
       }
     });
 
-    //*Tính năng người dùng hết lời mời kết bạn
+    //*Tính năng người dùng hủy lời mời kết bạn
     socket.on("CLIENT_CANCEL_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
       // console.log(myUserId); //id của mình
@@ -80,6 +80,45 @@ module.exports.user = async (res) => {
         );
       }
     });
+    
+    //*Tính năng từ chối kết bạn
+    socket.on("CLIENT_REFUSE_FRIEND", async (userId) => {
+      const myUserId = res.locals.user.id;
+      // console.log(myUserId); //id của đối phương
+      // console.log(userId); // id của mình
 
+      //* Xóa id của ông A vào acceptFriend của B
+      const existUserAinB = await User.findOne({
+        _id: myUserId,
+        acceptFriend: userId,
+      });
+
+      if (existUserAinB) {
+        await User.updateOne(
+          {
+            _id: myUserId,
+          },
+          {
+            $pull: { acceptFriend: userId },
+          }
+        );
+      }
+      //* Thêm id của ông B vào requestFriend của A
+      const existUserBinA = await User.findOne({
+        _id: userId,
+        requestFriend: myUserId,
+      });
+
+      if (existUserBinA) {
+        await User.updateOne(
+          {
+            _id: userId,
+          },
+          {
+            $pull: { requestFriend: myUserId },
+          }
+        );
+      }
+    });
   });
 };
