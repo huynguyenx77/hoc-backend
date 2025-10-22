@@ -59,8 +59,71 @@ socket.on("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", (data) => {
   const badgeUserAccept = document.querySelector("[badge-users-accept]");
   const userId = badgeUserAccept.getAttribute("badge-users-accept");
 
-  if ((userId == data.userId)) {
+  if (userId == data.userId) {
     badgeUserAccept.innerHTML = data.lengthAcceptFriend;
   }
 });
 //*end SERVER_RETURN_LENGTH_ACCEPT_FRIEND
+
+//* SERVER_RETURN_INFO_ACCEPT_FRIEND
+socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
+  const dataUserAccept = document.querySelector("[data-users-accept]");
+  const userId = dataUserAccept.getAttribute("data-users-accept");
+
+  if (userId == data.userId) {
+    //* vẽ giao diện
+    const newBoxUser = document.createElement("div");
+    newBoxUser.classList.add("col-6");
+
+    newBoxUser.innerHTML = `
+      <div class="box-user">
+        <div class="inner-avatar">
+          <img src="/images/avatar.webp" alt="${data.infoUser.fullName}">
+        </div>
+        <div class="inner-info">
+          <div class="inner-name">${data.infoUser.fullName}</div>
+          <div class="inner-button">
+            <button 
+              class="btn btn-sm btn-primary mr-1" 
+              btn-accept-friend="${data.infoUser._id}"
+            >
+              Chấp nhận
+            </button>
+            <button 
+              class="btn btn-sm btn-secondary mr-1" 
+              btn-refuse-friend="${data.infoUser._id}"
+            >
+              Hủy
+            </button>
+            <button 
+              class="btn btn-sm btn-secondary mr-1" 
+              btn-deleted-friend="${data.infoUser._id}" 
+              disabled="disabled"
+            >
+              Đã hủy
+            </button>
+            <button 
+              class="btn btn-sm btn-primary mr-1" 
+              btn-accepted-friend="68ebe86ce0144c77f2352bd6" 
+              disabled="disabled"
+            >
+              Đã chấp nhận
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    dataUserAccept.appendChild(newBoxUser);
+    //*end vẽ giao diện
+
+    //* xóa lời mời kết bạn
+    const btnRefuseFriend = document.querySelector("[btn-refuse-friend]");
+    btnRefuseFriend.addEventListener("click", () => {
+      btnRefuseFriend.closest(".box-user").classList.add("refuse"); //* closest là lấy ra thẻ cha
+      const userId = btnRefuseFriend.getAttribute("btn-refuse-friend");
+      socket.emit("CLIENT_REFUSE_FRIEND", userId);
+    });
+  }
+  //*end xóa lời mời kết bạn
+});
+//*end  SERVER_RETURN_INFO_ACCEPT_FRIEND
