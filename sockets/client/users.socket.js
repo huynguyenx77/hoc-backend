@@ -89,6 +89,15 @@ module.exports.user = async (res) => {
           }
         );
       }
+       //* Lấy độ dài accpetFriend của B trả về cho B
+      const infoUserB = await User.findOne({
+        _id: userId,
+      });
+      const lengthAcceptFriend = infoUserB.acceptFriend.length;
+      socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
+        userId: userId,
+        lengthAcceptFriend: lengthAcceptFriend,
+      })
     });
     
     //*Tính năng từ chối kết bạn
