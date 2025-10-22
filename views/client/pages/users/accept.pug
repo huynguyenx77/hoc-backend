@@ -10,7 +10,7 @@ block main
     .row
       each user in users
         .col-6
-          div(class="box-user add")
+          div(class="box-user")
             div(class="inner-avatar")
               img(src=(user.avatar ? user.avatar : "/images/avatar.webp")
                   alt=user.fullName
@@ -31,5 +31,10 @@ block main
                   btn-deleted-friend=user.id
                   disabled
                 ) Đã hủy
+                button(
+                  class="btn btn-sm btn-primary mr-1"
+                  btn-accepted-friend=user.id
+                  disabled
+                ) Đã chấp nhận
   block script
     script(type="module", src="/js/user.js")    

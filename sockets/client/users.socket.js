@@ -39,6 +39,16 @@ module.exports.user = async (res) => {
           }
         );
       }
+
+      //* Lấy độ dài accpetFriend của B trả về cho B
+      const infoUserB = await User.findOne({
+        _id: userId,
+      });
+      const lengthAcceptFriend = infoUserB.acceptFriend.length;
+      socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
+        userId: userId,
+        lengthAcceptFriend: lengthAcceptFriend,
+      })
     });
 
     //*Tính năng người dùng hủy lời mời kết bạn
@@ -115,6 +125,60 @@ module.exports.user = async (res) => {
             _id: userId,
           },
           {
+            $pull: { requestFriend: myUserId },
+          }
+        );
+      }
+    });
+
+    //*Tính năng chấp nhận lời mời kết bạn
+    socket.on("CLIENT_ACCEPT_FRIEND", async (userId) => {
+      const myUserId = res.locals.user.id;
+      // console.log(myUserId); //id của đối phương
+      // console.log(userId); // id của mình
+
+      //* Thêm {user_id, room_chat_id} của A vào friendList của B;
+      //* Xóa id của ông A vào acceptFriend của B
+      const existUserAinB = await User.findOne({
+        _id: myUserId,
+        acceptFriend: userId,
+      });
+
+      if (existUserAinB) {
+        await User.updateOne(
+          {
+            _id: myUserId,
+          },
+          {
+            $push: {
+              friendList: {
+                user_id: userId,
+                room_chat_id: "",
+              }
+            },
+            $pull: { acceptFriend: userId },
+          }
+        );
+      }
+      // *Thêm {user_id, room_chat_id} của B vào friendList của A;
+      //* Thêm id của ông B vào requestFriend của A
+      const existUserBinA = await User.findOne({
+        _id: userId,
+        requestFriend: myUserId,
+      });
+
+      if (existUserBinA) {
+        await User.updateOne(
+          {
+            _id: userId,
+          },
+          {
+            $push: {
+              friendList: {
+                user_id: myUserId,
+                room_chat_id: "",
+              }
+            },
             $pull: { requestFriend: myUserId },
           }
         );
