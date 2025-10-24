@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
   ],
   acceptFriend: Array, //lưu danh sách ai muốn kb
   requestFriend: Array, //lưu danh sách muốn kb
+  statusOnline: String,
   status: {
     type: String,
     default: "active",

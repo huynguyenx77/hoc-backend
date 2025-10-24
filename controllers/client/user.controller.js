@@ -1,9 +1,9 @@
 const User = require("../../models/user.models");
 const ForgotPassword = require("../../models/forgot-password.models");
 const Cart = require("../../models/cart.model");
-
+const usersSocket = require("../../sockets/client/users.socket")
 const genarateHelper = require("../../helpers/genarate");
-const sendMailHelper = require("../../helpers/sendMail")
+const sendMailHelper = require("../../helpers/sendMail");
 const md5 = require("md5");
 //* [GET]/register
 module.exports.register = async (req, res) => {
@@ -60,16 +60,36 @@ module.exports.loginPost = async (req, res) => {
     return;
   }
   res.cookie("tokenUser", user.tokenUser);
-  await Cart.updateOne({
-    _id: req.cookies.cartId,
-  }, {
-    user_id: user.id,
-  })
+  await User.updateOne(
+    {
+      _id: user.id,
+    },
+    {
+      statusOnline: "online",
+    }
+  );
+
+  await Cart.updateOne(
+    {
+      _id: req.cookies.cartId,
+    },
+    {
+      user_id: user.id,
+    }
+  );
   res.redirect("/");
 };
 
 //* [GET]/logout
 module.exports.logout = async (req, res) => {
+  await User.updateOne(
+    {
+      _id: res.locals.user.id,
+    },
+    {
+      statusOnline: "offline",
+    }
+  );
   res.clearCookie("tokenUser");
   res.redirect("/");
 };
@@ -106,7 +126,7 @@ module.exports.forgotPasswordPost = async (req, res) => {
   const forgotPassword = new ForgotPassword(objectForgotPassword);
   forgotPassword.save();
   //* Việc 2:  Gửi mã OTP qua email cho user
-  const subject = "Mã OTP khôi phục mật khẩu"
+  const subject = "Mã OTP khôi phục mật khẩu";
   const html = `
     Mã OTP xác minh lấy lại mật khẩu: <b>${otp}</b>. Thời gian hiệu lực của mã là 3 phút. Lưu ý không chia sẻ mã này cho bất kì ai
   `;
@@ -164,16 +184,15 @@ module.exports.resetPasswordPost = async (req, res) => {
     {
       tokenUser: tokenUser,
     },
-    { 
+    {
       password: md5(password),
     }
-  )
+  );
   res.redirect("/");
 };
 
 //* [GET]/info
 module.exports.info = async (req, res) => {
-
   res.render("client/pages/user/info", {
     pageTitle: "Thông tin cá nhân",
   });
